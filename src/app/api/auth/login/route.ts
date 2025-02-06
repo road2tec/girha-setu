@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
         name: "Admin",
         email: process.env.ADMIN_EMAIL,
         role: "admin",
+        isAdminApproved: true,
         profilePicture:
           "https://png.pngtree.com/png-clipart/20190924/original/pngtree-office-work-user-icon-avatar-png-image_4815124.jpg",
       };
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
         name: exisitingUser.name,
         email: exisitingUser.email,
         role: exisitingUser.role,
+        isAdminApproved: exisitingUser.isAdminApproved,
       };
       const token = jwt.sign(data, process.env.JWT_SECRET!, {
         expiresIn: "1d",

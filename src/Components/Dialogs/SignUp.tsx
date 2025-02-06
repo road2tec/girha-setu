@@ -11,6 +11,15 @@ const SignUp = () => {
     password: "",
     role: "buyer",
     profilePicture: "",
+    address: {
+      address: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+      coordinates: [0, 0],
+      landmark: "",
+    },
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -40,6 +49,40 @@ const SignUp = () => {
       });
     }
   };
+
+  const fetchLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUser({
+          ...user,
+          address: {
+            ...user.address,
+            coordinates: {
+              type: "Point",
+              coordinates: [
+                position.coords.latitude,
+                position.coords.longitude,
+              ],
+            },
+          },
+        });
+      },
+      (error) => {
+        toast.error(
+          "Unable to retrieve location. Please allow location access."
+        );
+        console.error("Geolocation error:", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchLocation();
+  }, []);
 
   // Handle Submit
   const handleSubmit = () => {
@@ -159,10 +202,9 @@ const SignUp = () => {
                             }}
                             className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
                           >
-                            <option value="buyer">Select Role</option>
+                            <option>Select Role</option>
                             <option value="buyer">Buyer</option>
                             <option value="owner">Owner</option>
-                            <option value="agent">Agent</option>
                           </select>
                           <br />
                         </div>
@@ -175,17 +217,126 @@ const SignUp = () => {
                         >
                           Upload Your Nice Photo
                         </label>
-                        <div className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary">
-                          <p>Drag & drop an image here, or click to upload</p>
-                          <input
-                            type="file"
-                            name="profileImageUrl"
-                            id="profileImageUrl"
-                            accept="image/* .png .jpeg .jpg"
-                            onChange={handleProfileImageChange}
-                          />
-                        </div>
+                        <input
+                          type="file"
+                          name="profileImageUrl"
+                          id="profileImageUrl"
+                          className="file-input file-input-bordered w-full"
+                          accept="image/* .png .jpeg .jpg"
+                          onChange={handleProfileImageChange}
+                        />
                       </div>
+                      {/* Address Fields */}
+                      <div className="mb-8">
+                        <label className="mb-3 block text-sm text-base-content">
+                          Address
+                        </label>
+                        <input
+                          type="text"
+                          name="address"
+                          value={user.address.address}
+                          onChange={(e) =>
+                            setUser({
+                              ...user,
+                              address: {
+                                ...user.address,
+                                address: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Street Address"
+                          className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
+                        />
+                      </div>
+
+                      {/* City, State, Country */}
+                      <div className="grid grid-cols-3 gap-4 mb-8">
+                        <input
+                          type="text"
+                          name="city"
+                          value={user.address.city}
+                          onChange={(e) =>
+                            setUser({
+                              ...user,
+                              address: {
+                                ...user.address,
+                                city: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="City"
+                          className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
+                        />
+                        <input
+                          type="text"
+                          name="state"
+                          value={user.address.state}
+                          onChange={(e) =>
+                            setUser({
+                              ...user,
+                              address: {
+                                ...user.address,
+                                state: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="State"
+                          className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
+                        />
+                        <input
+                          type="text"
+                          name="country"
+                          value={user.address.country}
+                          onChange={(e) =>
+                            setUser({
+                              ...user,
+                              address: {
+                                ...user.address,
+                                country: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Country"
+                          className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
+                        />
+                      </div>
+
+                      {/* Postal Code & Landmark */}
+                      <div className="grid grid-cols-2 gap-4 mb-8">
+                        <input
+                          type="text"
+                          name="postalCode"
+                          value={user.address.postalCode}
+                          onChange={(e) =>
+                            setUser({
+                              ...user,
+                              address: {
+                                ...user.address,
+                                postalCode: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Postal Code"
+                          className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
+                        />
+                        <input
+                          type="text"
+                          name="landmark"
+                          value={user.address.landmark}
+                          onChange={(e) =>
+                            setUser({
+                              ...user,
+                              address: {
+                                ...user.address,
+                                landmark: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Landmark (Optional)"
+                          className="w-full rounded-sm border border-stroke bg-base-200 text-base-content px-6 py-3 text-base outline-none transition-all duration-300 focus:border-primary"
+                        />
+                      </div>
+
                       {/* Password */}
                       <div className="mb-4 relative">
                         <label className="mb-3 block text-sm text-base-content">
@@ -268,6 +419,7 @@ const SignUp = () => {
                           </span>
                         </label>
                       </div>
+
                       {/* Sign UP Protocol */}
                       <div className="mb-6">
                         <button
@@ -278,7 +430,7 @@ const SignUp = () => {
                         </button>
                       </div>
                       <p className="text-center text-base font-medium text-body-color">
-                        Already using LG Data Dairies?{" "}
+                        Already using Flat-Finder?{" "}
                         <button
                           onClick={() => {
                             (

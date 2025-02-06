@@ -1,42 +1,42 @@
 import {
   HomeIcon,
   ListIcon,
-  UsersIcon,
+  HeartIcon,
   BellIcon,
-  SettingsIcon,
   MessageSquareIcon,
+  SettingsIcon,
 } from "lucide-react";
 import { SideNavItem } from "@/types/types";
 
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
     title: "Dashboard",
-    path: "/admin/dashboard",
+    path: "/buyer/dashboard",
     icon: <HomeIcon width="24" height="24" />,
   },
   {
-    title: "Users",
-    path: "/admin/users",
-    icon: <UsersIcon width="24" height="24" />,
-  },
-  {
-    title: "Manage Listings",
-    path: "/admin/listings",
+    title: "Browse Listings",
+    path: "/buyer/listings",
     icon: <ListIcon width="24" height="24" />,
   },
   {
+    title: "Saved Listings",
+    path: "/buyer/wishlist",
+    icon: <HeartIcon width="24" height="24" />,
+  },
+  {
     title: "Messages",
-    path: "/admin/messages",
+    path: "/buyer/messages",
     icon: <MessageSquareIcon width="24" height="24" />,
   },
   {
     title: "Notifications",
-    path: "/admin/notifications",
+    path: "/buyer/notifications",
     icon: <BellIcon width="24" height="24" />,
   },
   {
     title: "Settings",
-    path: "/admin/settings",
+    path: "/buyer/settings",
     icon: <SettingsIcon width="24" height="24" />,
   },
 ];

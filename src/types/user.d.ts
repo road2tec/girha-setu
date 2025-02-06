@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Address } from "./Address";
 
 export interface User {
   _id?: mongoose.Schema.Types.ObjectId;
@@ -9,6 +10,8 @@ export interface User {
   favorites?: [{ type: mongoose.Schema.Types.ObjectId; ref: "Flat" }];
   profilePicture: string;
   searchHistory?: [{ query: string; timestamp: Date }];
+  address: Address;
   notifications?: [{ message: string; seen: boolean; timestamp: Date }];
   createdAt?: Date;
+  isAdminApproved: boolean;
 }

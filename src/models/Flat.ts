@@ -20,28 +20,18 @@ const FlatSchema = new mongoose.Schema(
       required: true,
     },
     location: {
-      address: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      country: { type: String, required: true },
-      coordinates: {
-        type: { type: String, default: "Point" },
-        coordinates: [Number],
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    broker: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     images: {
-      url: String,
-      caption: String,
+      type: String,
+      required: true,
     },
     amenities: [
       {
@@ -67,7 +57,7 @@ const FlatSchema = new mongoose.Schema(
       required: true,
     },
     area: {
-      type: Number, // in square feet
+      type: Number,
       required: true,
     },
     availability: {

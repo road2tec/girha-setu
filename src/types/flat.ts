@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export type Flat = {
   _id?: string;
   title: string;
@@ -11,7 +13,7 @@ export type Flat = {
     coordinates: [number, number];
   };
   type: "Apartment" | "House" | "Villa" | "Penthouse" | "Studio";
-  images: { url: string; caption: string };
+  images: string;
   amenities: [
     {
       type: string;
@@ -30,7 +32,7 @@ export type Flat = {
   bedrooms: number;
   bathrooms: number;
   area: number;
-  owner: string;
+  owner: User;
   broker: string;
   availability: boolean;
   availabilityCalendar: [{ date: Date; available: boolean }];

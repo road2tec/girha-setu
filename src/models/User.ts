@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["buyer", "owner", "agent", "admin"],
+      enum: ["buyer", "owner"],
       default: "buyer",
     },
     favorites: [
@@ -30,6 +30,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    address: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
+    },
     searchHistory: [
       {
         query: String,
@@ -38,11 +43,14 @@ const UserSchema = new mongoose.Schema(
     ],
     notifications: [
       {
-        message: String,
-        seen: { type: Boolean, default: false },
-        timestamp: { type: Date, default: Date.now },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Notification",
       },
     ],
+    isAdminApproved: {
+      type: Boolean,
+      default: false,
+    },
     createdAt: {
       type: Date,
       default: Date.now,
