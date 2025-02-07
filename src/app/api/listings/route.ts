@@ -1,6 +1,8 @@
 import dbConfig from "@/middlewares/db.config";
 import Address from "@/models/Address";
 import Flat from "@/models/Flat";
+import Notification from "@/models/Notification";
+import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 dbConfig();
@@ -23,6 +25,18 @@ export async function POST(req: NextRequest) {
       owner: user._id,
     });
     await newListing.save();
+    // Create new Notification and add to all user
+    const notification = new Notification({
+      property: newListing._id,
+      message: "New Listing",
+      type: "New Listing",
+    });
+    await notification.save();
+    const users = await User.find({ role: "buyer" });
+    users.forEach(async (u) => {
+      u.notifications.push(notification._id);
+      await u.save();
+    });
     return NextResponse.json({ message: "Listing added successfully" });
   } catch (error) {
     console.log(error);

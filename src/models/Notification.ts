@@ -14,10 +14,6 @@ const NotificationSchema = new Schema({
     enum: ["New Listing", "Price Drop", "Booking Update", "Admin Message"],
     required: true,
   },
-  isRead: {
-    type: Boolean,
-    default: false,
-  },
   createdAt: {
     type: Date,
     default: Date.now,

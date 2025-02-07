@@ -1,3 +1,5 @@
+import Address from "@/models/Address";
+import Flat from "@/models/Flat";
 import mongoose from "mongoose";
 
 // Database Connection
@@ -9,6 +11,8 @@ const dbConfig = async () => {
     connection.on("connected", () => {
       console.log("Connected to the Database");
     });
+    Address;
+    Flat;
     connection.on("error", (error) => {
       console.log("Error: ", error);
     });

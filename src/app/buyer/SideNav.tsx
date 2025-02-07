@@ -9,6 +9,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthProvider";
 import { ChevronDown, ChevronRight, Home, Menu } from "lucide-react";
 import ThemeToggler from "@/Components/Navbar/ThemeToggler";
+import Notification from "@/Components/Notification";
 
 const SideNav = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -64,6 +65,7 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
 
             <div className="hidden lg:block">
               <ul className="menu menu-horizontal flex items-center space-x-4">
+                <Notification />
                 <ThemeToggler />
                 <div className="dropdown dropdown-left cursor-pointer bg-transparent">
                   <Image
