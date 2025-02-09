@@ -1,3 +1,4 @@
+import { StaticRenderResultMetadata } from "next/dist/server/render-result";
 import { User } from "./user";
 
 export type Flat = {
@@ -13,7 +14,8 @@ export type Flat = {
     coordinates: [number, number];
   };
   type: "Apartment" | "House" | "Villa" | "Penthouse" | "Studio";
-  images: string;
+  mainImage: string;
+  images: string[];
   amenities: [
     {
       type: string;
@@ -29,13 +31,18 @@ export type Flat = {
       ];
     }
   ];
-  bedrooms: number;
-  bathrooms: number;
+  bhks: number;
   area: number;
   owner: User;
-  broker: string;
   availability: boolean;
   availabilityCalendar: [{ date: Date; available: boolean }];
+  bookings: [
+    {
+      startDate: Date;
+      endDate: Date;
+      user: User;
+    }
+  ];
   favoritesCount: number;
   createdAt?: Date;
 };

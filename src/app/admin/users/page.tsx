@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Check, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { ObjectId } from "mongoose";
 
 const UserPage = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -31,26 +32,31 @@ const UserPage = () => {
       });
       toast.promise(response, {
         loading: "Approving user...",
-        success: "User approved successfully",
+        success: () => {
+          fetchUsers();
+          return "User approved successfully";
+        },
         error: "Error approving user",
       });
-      setUsers(
-        users.map((user) =>
-          user._id === userId ? { ...user, isAdminApproved: true } : user
-        )
-      );
     } catch (error) {
       console.error("Error approving user:", error);
     }
   };
 
   // Delete User
-  const handleDelete = async (userId: string) => {
+  const handleDelete = async (userId: ObjectId) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`/api/users/${userId}`);
-      setUsers(users.filter((user) => user._id !== userId));
+      const res = axios.delete(`/api/users/delete?id=${userId}`);
+      toast.promise(res, {
+        loading: "Deleting user...",
+        success: () => {
+          fetchUsers();
+          return "User deleted successfully";
+        },
+        error: "Error deleting user",
+      });
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -79,7 +85,7 @@ const UserPage = () => {
             {users.length > 0 ? (
               users.map((user, index) => (
                 <tr
-                  key={user._id || index}
+                  key={index}
                   className="border-b border-base-content hover:bg-base-300 transition"
                 >
                   <td className="py-3 px-6">{index + 1}</td>
@@ -131,7 +137,7 @@ const UserPage = () => {
                     )}
                     {/* Delete Button */}
                     <button
-                      onClick={() => handleDelete(user._id)}
+                      onClick={() => handleDelete(user._id!)}
                       className="btn btn-error transition"
                     >
                       <Trash2 size={16} /> Delete
@@ -140,13 +146,8 @@ const UserPage = () => {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td
-                  colSpan="6"
-                  className="text-center py-6 text-base-content/50"
-                >
-                  No users found.
-                </td>
+              <tr className="text-center py-6 text-base-content/50">
+                No users found.
               </tr>
             )}
           </tbody>

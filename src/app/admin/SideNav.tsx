@@ -20,8 +20,8 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const router = useRouter();
   const handleLogout = async () => {
-    await axios.post("/api/auth/logout");
-    router.push("/login");
+    await axios.get("/api/auth/logout");
+    router.push("/");
   };
 
   const pathname = usePathname();

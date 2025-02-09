@@ -1,5 +1,6 @@
 import Address from "@/models/Address";
 import Flat from "@/models/Flat";
+import Notification from "@/models/Notification";
 import mongoose from "mongoose";
 
 // Database Connection
@@ -13,6 +14,7 @@ const dbConfig = async () => {
     });
     Address;
     Flat;
+    Notification;
     connection.on("error", (error) => {
       console.log("Error: ", error);
     });

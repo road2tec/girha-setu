@@ -29,10 +29,11 @@ const FlatSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    images: {
+    mainImage: {
       type: String,
       required: true,
     },
+    images: [String],
     amenities: [
       {
         type: String,
@@ -48,11 +49,7 @@ const FlatSchema = new mongoose.Schema(
         ],
       },
     ],
-    bedrooms: {
-      type: Number,
-      required: true,
-    },
-    bathrooms: {
+    bhks: {
       type: Number,
       required: true,
     },
@@ -64,10 +61,21 @@ const FlatSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    availabilityCalendar: [
+    bookings: [
       {
-        date: Date,
-        available: Boolean,
+        startDate: {
+          type: Date,
+          required: true,
+        },
+        endDate: {
+          type: Date,
+          required: true,
+        },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
       },
     ],
     favoritesCount: {

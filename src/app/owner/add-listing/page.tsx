@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import toast from "react-hot-toast";
 import { Flat } from "@/types/flat";
 import { useAuth } from "@/context/AuthProvider";
+import { popularCitiesOrDistricts, STATES_IN_INDIA } from "@/utils/constants";
 
 const AddListing = () => {
   const [listing, setListing] = useState({
@@ -11,16 +12,16 @@ const AddListing = () => {
     description: "",
     price: "",
     type: "",
-    bedrooms: "",
-    bathrooms: "",
+    bhks: "",
     area: "",
     amenities: [],
-    images: "",
+    mainImage: "",
+    images: [],
     address: {
       address: "",
       city: "",
       state: "",
-      country: "",
+      country: "India",
       postalCode: "",
       coordinates: {
         type: "Point",
@@ -45,7 +46,6 @@ const AddListing = () => {
     }));
   };
 
-  // Handle multi-image upload
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     if (file.size > 5 * 1024 * 1024) {
@@ -61,12 +61,59 @@ const AddListing = () => {
       success: (data: AxiosResponse) => {
         setListing({
           ...listing,
-          images: data.data.data.url,
+          mainImage: data.data.data.url,
         });
         return "Image Uploaded Successfully";
       },
       error: (err: unknown) => `This just happened: ${err}`,
     });
+  };
+  // Handle multi-image upload
+  const handleMultipleImageChange = async (e: any) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    // Validate number of images
+    if (files.length > 5) {
+      toast.error("You can upload only 5 images at a time");
+      return;
+    }
+
+    const uploadedImages: string[] = [];
+
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`File ${file.name} exceeds 5MB`);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await toast.promise(
+          axios.post("/api/helper/upload-img", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          }),
+          {
+            loading: `Uploading ${file.name}...`,
+            success: `${file.name} uploaded successfully!`,
+            error: `Failed to upload ${file.name}`,
+          }
+        );
+
+        const imageUrl = response.data.data.secure_url;
+        uploadedImages.push(imageUrl);
+
+        // Update state after each upload
+        setListing((prev) => ({
+          ...prev,
+          images: [...prev.images, imageUrl],
+        }));
+      } catch (error) {
+        console.error(`Error uploading ${file.name}:`, error);
+      }
+    }
   };
 
   // Handle geolocation API
@@ -98,7 +145,6 @@ const AddListing = () => {
   // Handle form submission
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(listing);
     try {
       const response = axios.post("/api/listings", { listing, user });
       toast.promise(response, {
@@ -183,6 +229,7 @@ const AddListing = () => {
               value={listing.price}
               onChange={handleChange}
               className="input input-bordered w-full"
+              min={0}
               required
             />
           </label>
@@ -208,32 +255,50 @@ const AddListing = () => {
           </label>
         </div>
 
-        {/* <label className="form-control w-full">
+        <label className="form-control w-full">
           <div className="label">
             <span className="label-text font-medium">Amenities</span>
           </div>
-          <select
-            name="type"
-            onChange={(e) => {
-              setListing({
-                ...listing,
-                amenities: amenities.push(e.target.value),
-              });
-            }}
-            multiple
-            className="select select-bordered w-full"
-            required
-          >
-            <option value="Parking">Parking</option>
-            <option value="Swimming Pool">Swimming Pool</option>
-            <option value="Gym">Gym</option>
-            <option value="Balcony">Balcony</option>
-            <option value="Security">Security</option>
-            <option value="Power Backup">Power Backup</option>
-            <option value="WiFi">WiFi</option>
-            <option value="Garden">Garden</option>
-          </select>
-        </label> */}
+          <div className="flex flex-wrap gap-4 flex-row">
+            {[
+              "Parking",
+              "Swimming Pool",
+              "Gym",
+              "Balcony",
+              "Security",
+              "Power Backup",
+              "WiFi",
+              "Garden",
+            ].map((amenity) => (
+              <label className="form-control" key={amenity}>
+                <div className="label">
+                  <span className="label-text font-medium">{amenity}</span>
+                </div>
+                <input
+                  type="checkbox"
+                  name="amenities"
+                  value={amenity}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setListing({
+                        ...listing,
+                        amenities: [...listing.amenities, e.target.value],
+                      });
+                    } else {
+                      setListing({
+                        ...listing,
+                        amenities: listing.amenities.filter(
+                          (a) => a !== e.target.value
+                        ),
+                      });
+                    }
+                  }}
+                  className="checkbox checkbox-primary"
+                />
+              </label>
+            ))}
+          </div>
+        </label>
 
         <label htmlFor="" className="form-control w-full">
           <div className="label">
@@ -254,27 +319,15 @@ const AddListing = () => {
         <div className="grid grid-cols-3 gap-4">
           <label className="form-control w-full">
             <div className="label">
-              <span className="label-text font-medium">Bedrooms</span>
+              <span className="label-text font-medium">No. Of BHKs</span>
             </div>
             <input
               type="number"
-              name="bedrooms"
-              value={listing.bedrooms}
+              name="bhks"
+              value={listing.bhks}
               onChange={handleChange}
               className="input input-bordered w-full"
-              required
-            />
-          </label>
-          <label className="form-control w-full">
-            <div className="label">
-              <span className="label-text font-medium">Bathrooms</span>
-            </div>
-            <input
-              type="number"
-              name="bathrooms"
-              value={listing.bathrooms}
-              onChange={handleChange}
-              className="input input-bordered w-full"
+              min={1}
               required
             />
           </label>
@@ -288,6 +341,7 @@ const AddListing = () => {
               value={listing.area}
               onChange={handleChange}
               className="input input-bordered w-full"
+              min={100}
               required
             />
           </label>
@@ -295,33 +349,49 @@ const AddListing = () => {
 
         {/* Address Inputs */}
         <div className="grid grid-cols-2 gap-4">
-          <label htmlFor="" className="form-control w-full">
-            <div className="label">
-              <span className="label-text font-medium">City</span>
-            </div>
-            <input
-              type="text"
-              name="city"
-              value={listing.address.city}
-              onChange={handleAddressChange}
-              placeholder="City"
-              className="input input-bordered w-full"
-              required
-            />
-          </label>
           <label htmlFor="">
             <div className="label">
               <span className="label-text font-medium">State</span>
             </div>
-            <input
-              type="text"
-              name="state"
+            <select
               value={listing.address.state}
+              onChange={(e) => {
+                setListing({
+                  ...listing,
+                  address: { ...listing.address, state: e.target.value },
+                });
+              }}
+              className="input input-bordered w-full"
+            >
+              <option defaultChecked>Select State</option>
+              {STATES_IN_INDIA.map((state: string) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label htmlFor="" className="form-control w-full">
+            <div className="label">
+              <span className="label-text font-medium">City</span>
+            </div>
+            <select
+              name="city"
+              value={listing.address.city}
               onChange={handleAddressChange}
-              placeholder="State"
               className="input input-bordered w-full"
               required
-            />
+            >
+              <option defaultChecked>Select Your Location</option>
+              {listing.address.state &&
+                popularCitiesOrDistricts[listing.address.state].map(
+                  (city: string) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  )
+                )}
+            </select>
           </label>
         </div>
 
@@ -332,13 +402,12 @@ const AddListing = () => {
               <span className="label-text font-medium">Country</span>
             </div>
             <input
-              type="text"
               name="country"
               value={listing.address.country}
-              onChange={handleAddressChange}
+              disabled
+              readOnly
               placeholder="Country"
               className="input input-bordered w-full"
-              required
             />
           </label>
           <label htmlFor="">
@@ -369,12 +438,26 @@ const AddListing = () => {
         {/* Image Upload */}
         <label className="block text-sm font-medium text-base-content">
           <div className="label">
-            <span className="label-text font-medium">Upload an Image</span>
+            <span className="label-text font-medium">This is Main Image</span>
           </div>
           <input
             type="file"
             className="file-input file-input-bordered w-full"
             onChange={handleImageChange}
+          />
+        </label>
+        <label className="block text-sm font-medium text-base-content">
+          <div className="label">
+            <span className="label-text font-medium">
+              Upload Multiple Images
+            </span>
+          </div>
+          <input
+            type="file"
+            className="file-input file-input-bordered w-full"
+            onChange={handleMultipleImageChange}
+            accept="image/*"
+            multiple
           />
         </label>
 

@@ -2,8 +2,18 @@
 import Link from "next/link";
 import TypeWriter from "./TypeWriter";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Hero = () => {
+  const propertyTypes = ["Apartment", "House", "Villa", "Penthouse", "Studio"];
+  const locations = ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai"];
+  const router = useRouter();
+  const [filters, setFilters] = useState({
+    keyword: "",
+    propertyType: "",
+    location: "",
+  });
   const text = [
     "घर की तलाश ? अब हुई आसान ! 🏡",
     "सही घर, सही दाम, सही समय ! ⏳",
@@ -52,11 +62,21 @@ const Hero = () => {
       count: 123,
     },
   ];
+  const handleChange = (e: any) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    const query = new URLSearchParams(filters).toString();
+    router.push(`/listings?${query}`);
+  };
+
   return (
     <>
       <section
         id="home"
-        className="relative z-10 overflow-hidden bg-base-300 pb-16 pt-[120px] dark:bg-gray-dark md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px] flex items-center justify-center h-screen"
+        className="relative z-10 overflow-hidden bg-base-300 flex items-center justify-center h-[calc(100vh-4rem)]"
       >
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
@@ -89,12 +109,6 @@ const Hero = () => {
                   >
                     🚗 Get Started
                   </button>
-                  <Link
-                    href="https://github.com/Scammerpatil/Gamanika_GPS_Based_Toll_Collection_System.git"
-                    className="inline-block rounded-sm bg-secondary px-8 py-4 text-base font-semibold text-secondary-content duration-300 ease-in-out hover:bg-secondary/80"
-                  >
-                    ⭐ Star on GitHub
-                  </Link>
                 </div>
               </div>
             </div>
@@ -354,27 +368,54 @@ const Hero = () => {
         <div className="bg-base-200 py-5 w-full">
           <div className="">
             <form
-              action=""
-              className="w-full px-10 py-4 flex flex-wrap justify-between items-center"
+              onSubmit={handleSearch}
+              className="w-full px-10 py-4 flex flex-wrap justify-between items-center gap-4"
             >
+              {/* Search Keyword */}
               <input
                 type="text"
+                name="keyword"
+                value={filters.keyword}
+                onChange={handleChange}
                 className="input w-1/4 h-16 py-4 px-6 bg-base-content text-base-300 text-lg placeholder:text-base-300"
                 placeholder="Search Keyword"
               />
+
+              {/* Property Type Dropdown */}
               <select
+                name="propertyType"
+                value={filters.propertyType}
+                onChange={handleChange}
                 className="input w-1/4 h-16 py-4 px-6 bg-base-content text-base-300 text-lg placeholder:text-base-300"
-                aria-placeholder="Property Type"
               >
-                <option defaultChecked>What type of property you want?</option>
+                <option value="">What type of property?</option>
+                {propertyTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
               </select>
+
+              {/* Location Dropdown */}
               <select
+                name="location"
+                value={filters.location}
+                onChange={handleChange}
                 className="input w-1/4 h-16 py-4 px-6 bg-base-content text-base-300 text-lg placeholder:text-base-300"
-                aria-placeholder="Location"
               >
-                <option defaultChecked> Where you want? </option>
+                <option value="">Where do you want?</option>
+                {locations.map((loc) => (
+                  <option key={loc} value={loc}>
+                    {loc}
+                  </option>
+                ))}
               </select>
-              <button className="btn btn-primary w-1/5 h-16 text-lg">
+
+              {/* Search Button */}
+              <button
+                type="submit"
+                className="btn btn-primary w-1/5 h-16 text-lg"
+              >
                 Search
               </button>
             </form>

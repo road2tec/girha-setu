@@ -239,8 +239,8 @@ const ListingPage = () => {
                   <button
                     onClick={() =>
                       setSelectedLocation({
-                        lat: listing.location?.coordinates[0],
-                        lng: listing.location?.coordinates[1],
+                        lat: listing.location.coordinates[0],
+                        lng: listing.location.coordinates[1],
                       })
                     }
                     className="btn btn-sm btn-primary flex items-center gap-1"
@@ -251,6 +251,24 @@ const ListingPage = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+      {selectedLocation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-base-content p-6 rounded-lg shadow-lg w-4/5 max-w-2xl">
+            <h2 className="text-lg font-semibold mb-4">Property Location</h2>
+            <iframe
+              className="w-full h-64 rounded-md"
+              src={`https://www.google.com/maps?q=${selectedLocation.lat},${selectedLocation.lng}&output=embed}`}
+              loading="lazy"
+            ></iframe>
+            <button
+              className="btn btn-sm btn-error mt-4 w-full"
+              onClick={() => setSelectedLocation(null)}
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -8,7 +8,6 @@ dbConfig();
 
 export async function POST(req: NextRequest) {
   const { user } = await req.json();
-  console.log(user);
   // find exisiting user in database
   const existingUser = await User.findOne({ email: user.email });
   if (existingUser) {
@@ -32,6 +31,7 @@ export async function POST(req: NextRequest) {
     await newUser.save();
     return NextResponse.json({ message: "User created" }, { status: 201 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { message: "Something went wrong" },
       { status: 500 }

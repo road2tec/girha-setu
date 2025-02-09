@@ -64,7 +64,7 @@ const ThemeToggler = () => {
       </div>
       <ul
         tabIndex={0}
-        className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 overflow-y-auto block h-80 shadow-2xl text-base-content"
+        className="menu dropdown-content bg-base-100 rounded-box z-[100] w-52 p-2 overflow-y-auto block h-80 shadow-2xl text-base-content"
       >
         {themes.map((theme) => (
           <li key={theme}>

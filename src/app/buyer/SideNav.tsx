@@ -10,13 +10,21 @@ import { useAuth } from "@/context/AuthProvider";
 import { ChevronDown, ChevronRight, Home, Menu } from "lucide-react";
 import ThemeToggler from "@/Components/Navbar/ThemeToggler";
 import Notification from "@/Components/Notification";
+import toast from "react-hot-toast";
 
 const SideNav = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { user } = useAuth();
   const handleLogout = async () => {
-    await axios.get("/api/auth/logout");
-    router.push("/");
+    const res = axios.get("/api/auth/logout");
+    toast.promise(res, {
+      loading: "Logging out...",
+      success: () => {
+        router.push("/");
+        return "Logged out successfully";
+      },
+      error: "Error logging out",
+    });
   };
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean);
