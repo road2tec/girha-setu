@@ -82,6 +82,12 @@ const FlatSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    rating: [
+      {
+        type: Number,
+        default: 0,
+      },
+    ],
     createdAt: {
       type: Date,
       default: Date.now,
@@ -92,5 +98,6 @@ const FlatSchema = new mongoose.Schema(
 
 // Enable geospatial queries
 FlatSchema.index({ "location.coordinates": "2dsphere" });
+FlatSchema.index({ title: "text", description: "text", location: "text" });
 
 export default mongoose.models.Flat || mongoose.model("Flat", FlatSchema);

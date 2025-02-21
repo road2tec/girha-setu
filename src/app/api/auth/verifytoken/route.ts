@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     if (data.name === "Admin") {
       return NextResponse.json({ data, status: 200 });
     }
-    const user = await User.findOne({ _id: data._id });
+    const user = await User.findOne({ _id: data._id }).populate("address");
     return NextResponse.json({ data, user, status: 200 });
   } catch (err) {
     console.error(err);

@@ -1,5 +1,7 @@
+import { Notification } from "@/types/Notification";
+import { IconBell } from "@tabler/icons-react";
 import axios from "axios";
-import { Bell } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Notification = () => {
@@ -24,7 +26,7 @@ const Notification = () => {
         <span className="indicator-item badge badge-secondary">
           {notifications && notifications.length}
         </span>
-        <Bell size={20} />
+        <IconBell size={20} />
       </div>
       <ul
         tabIndex={0}
@@ -34,12 +36,20 @@ const Notification = () => {
           <li className="text-base-content">No new notifications</li>
         ) : (
           notifications &&
-          notifications.map((notification) => (
+          notifications.map((notification: Notification) => (
             <div
               key={notification._id}
               className="text-base-content btn btn-ghost"
             >
-              {notification.message} - {notification.property.type}
+              <Link
+                href={
+                  notification.property
+                    ? `property?id=${notification.property._id}`
+                    : "#"
+                }
+              >
+                {notification.message} - {notification.property?.type}
+              </Link>
             </div>
           ))
         )}

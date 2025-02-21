@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Phone, MapPin } from "lucide-react";
+import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 
 const Contact = () => {
   return (
@@ -44,19 +44,19 @@ const Contact = () => {
         {/* Contact Info */}
         <div>
           <img
-            src="https://source.unsplash.com/600x400/?customer-service"
+            src="/contact.png"
             alt="Contact Us"
-            className="rounded-lg shadow-lg mb-6"
+            className="rounded-lg shadow-lg mb-6 h-80"
           />
           <div className="text-base-content/70">
             <p className="flex items-center gap-2">
-              <Phone size={18} /> +91 9876543210
+              <IconPhone size={18} /> +91 9876543210
             </p>
             <p className="flex items-center gap-2 mt-2">
-              <Mail size={18} /> support@flatfinder.com
+              <IconMail size={18} /> support@flatfinder.com
             </p>
             <p className="flex items-center gap-2 mt-2">
-              <MapPin size={18} /> 123, Green Street, New Delhi, India
+              <IconMapPin size={18} /> 123, Green Street, New Delhi, India
             </p>
           </div>
         </div>

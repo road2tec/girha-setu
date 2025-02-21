@@ -10,6 +10,6 @@ export async function POST(req: NextRequest) {
     const data = jwt.verify(token, process.env.JWT_SECRET!);
     return NextResponse.json({ data, status: 200 });
   } catch (err) {
-    NextResponse.json({ err }, { status: 401 });
+    return NextResponse.json({ err }, { status: 401 });
   }
 }

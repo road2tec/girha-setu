@@ -1,4 +1,4 @@
-import { ChevronDown, Sun } from "lucide-react";
+import { IconChevronDown, IconSun } from "@tabler/icons-react";
 import { useEffect } from "react";
 
 const ThemeToggler = () => {
@@ -59,8 +59,8 @@ const ThemeToggler = () => {
         role="button"
         className="btn btn-primary text-primary-content flex items-center gap-2"
       >
-        <Sun />
-        <ChevronDown />
+        <IconSun />
+        <IconChevronDown />
       </div>
       <ul
         tabIndex={0}
