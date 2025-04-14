@@ -25,18 +25,8 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <ListIcon width="24" height="24" />,
   },
   {
-    title: "Messages",
-    path: "/admin/messages",
-    icon: <MessageSquareIcon width="24" height="24" />,
-  },
-  {
     title: "Notifications",
     path: "/admin/notifications",
     icon: <BellIcon width="24" height="24" />,
-  },
-  {
-    title: "Settings",
-    path: "/admin/settings",
-    icon: <SettingsIcon width="24" height="24" />,
   },
 ];

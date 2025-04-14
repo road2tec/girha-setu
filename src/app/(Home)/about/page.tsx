@@ -2,23 +2,21 @@
 
 const About = () => {
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-primary">About Us</h1>
-        <p className="text-lg text-base-content/70 mt-3">
-          Your trusted platform for finding the perfect rental home.
-        </p>
-      </div>
+    <section className="bg-base-100 max-h-[calc(100vh-6rem)] flex items-center flex-col px-10 overflow-y-hidden">
+      <h1 className="text-4xl font-bold text-primary uppercase my-auto mt-6">
+        About Us
+      </h1>
+      <p className="text-lg text-base-content/70 mt-3 mb-12">
+        Your trusted platform for finding the perfect rental home.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Image Section */}
         <img
           src="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/001/211/233/datas/original.png"
           alt="About Us"
-          className="rounded-lg shadow-lg h-96 object-cover"
+          className="rounded-lg shadow-lg h-[50%] object-cover mx-auto"
         />
 
-        {/* Text Section */}
         <div>
           <h2 className="text-2xl font-semibold text-secondary">Who We Are</h2>
           <p className="text-base-content/70 mt-3">
@@ -38,7 +36,7 @@ const About = () => {
           </ul>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

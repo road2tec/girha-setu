@@ -8,7 +8,6 @@ dbConfig();
 
 export async function POST(req: NextRequest) {
   const { user } = await req.json();
-  // find exisiting user in database
   const existingUser = await User.findOne({ email: user.email });
   if (existingUser) {
     return NextResponse.json(
@@ -16,7 +15,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  // create new user
   const encryptedPassword = await brcyrpt.hash(user.password, 10);
   try {
     const address = new Address({
@@ -27,6 +25,7 @@ export async function POST(req: NextRequest) {
       ...user,
       password: encryptedPassword,
       address: address._id,
+      isAdminApproved: user.role === "buyer" ? true : false,
     });
     await newUser.save();
     return NextResponse.json({ message: "User created" }, { status: 201 });

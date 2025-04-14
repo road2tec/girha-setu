@@ -11,8 +11,9 @@ export type Flat = {
     city: string;
     state: string;
     country: string;
-    coordinates: [number, number];
+    coordinates: { coordinates: number[]; type: string };
   };
+  distance?: number;
   type: "Apartment" | "House" | "Villa" | "Penthouse" | "Studio";
   mainImage: string;
   images: string[];
@@ -34,15 +35,12 @@ export type Flat = {
   bhks: number;
   area: number;
   owner: User;
-  availability: boolean;
-  availabilityCalendar: [{ date: Date; available: boolean }];
-  bookings: [
+  rating: [
     {
-      startDate: Date;
-      endDate: Date;
       user: User;
+      rating: number;
+      comment: string;
     }
   ];
-  favoritesCount: number;
   createdAt?: Date;
 };

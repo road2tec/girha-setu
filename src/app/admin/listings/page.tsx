@@ -73,77 +73,62 @@ const ManageListing = () => {
       console.error("Error deleting listing:", error);
     }
   };
-  // Edit Property
   const handleEdit = (property: Flat) => {
     setForm(property);
     setEditingId(property._id!);
   };
 
   return (
-    <div className="px-10 py-4">
-      <div role="tablist" className="tabs tabs-lifted">
-        <input
-          type="radio"
-          name="my_tabs"
-          role="tab"
-          className="tab text-lg checked:bg-base-100"
-          style={{ width: "calc(70vw/3)", height: "50px", textAlign: "center" }}
-          defaultChecked
-          aria-label="View Listings"
-        />
-        <div
-          role="tabpanel"
-          className="tab-content bg-base-300 p-6 rounded-box space-y-4"
-        >
-          <h2 className="text-xl font-semibold">Existing Listings</h2>
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead>
-                <tr className="text-base">
-                  <th>Title</th>
-                  <th>Price</th>
-                  <th>Type</th>
-                  <th>Area</th>
-                  <th>Actions</th>
+    <>
+      <h1 className="uppercase text-3xl text-center font-semibold mb-6">
+        Manage Listings
+      </h1>
+      <div className="overflow-x-auto">
+        <table className="table table-zebra bg-base-300 rounded-lg w-full">
+          <thead>
+            <tr className="text-base">
+              <th>Title</th>
+              <th>Price</th>
+              <th>Type</th>
+              <th>Area</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {properties.length !== 0 ? (
+              properties.map((property) => (
+                <tr key={property._id}>
+                  <td>{property.title}</td>
+                  <td>₹{property.price} /month</td>
+                  <td>{property.type}</td>
+                  <td>{property.area} sqft</td>
+                  <td>
+                    <Link
+                      href={`/admin/edit?id=${property._id}`}
+                      className="btn btn-sm btn-warning mr-2"
+                    >
+                      <EditIcon size={16} />
+                    </Link>
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => handleDelete(property._id)}
+                    >
+                      <Trash2Icon size={16} />
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {properties.length !== 0 ? (
-                  properties.map((property) => (
-                    <tr key={property._id}>
-                      <td>{property.title}</td>
-                      <td>${property.price}</td>
-                      <td>{property.type}</td>
-                      <td>{property.area} sqft</td>
-                      <td>
-                        <Link
-                          href={`/admin/edit?id=${property._id}`}
-                          className="btn btn-sm btn-warning mr-2"
-                        >
-                          <EditIcon size={16} />
-                        </Link>
-                        <button
-                          className="btn btn-sm btn-error"
-                          onClick={() => handleDelete(property._id)}
-                        >
-                          <Trash2Icon size={16} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="text-center text-base h-[50vh]">
-                      No properties found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="text-center text-base h-[50vh]">
+                  No properties found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </>
   );
 };
 

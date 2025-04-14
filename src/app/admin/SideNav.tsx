@@ -1,29 +1,33 @@
 "use client";
 import { SideNavItem } from "@/types/types";
 import { SIDENAV_ITEMS } from "./constant";
-import {
-  AlignJustify,
-  ChevronDown,
-  ChevronRight,
-  Home,
-  Route,
-} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import ThemeToggler from "@/Components/Navbar/ThemeToggler";
-import { useAuth } from "@/context/AuthProvider";
 import axios from "axios";
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconHome,
+  IconMenu,
+} from "@tabler/icons-react";
+import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthProvider";
+import ThemeToggler from "@/Components/Navbar/ThemeToggler";
 
 const SideNav = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
   const router = useRouter();
+  const { user } = useAuth();
   const handleLogout = async () => {
-    await axios.get("/api/auth/logout");
+    const res = axios.get("/api/auth/logout");
+    toast.promise(res, {
+      loading: "Logging out...",
+      success: "Logged out successfully",
+      error: "Error logging out",
+    });
     router.push("/");
   };
-
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean);
   if (!user) return null;
@@ -38,13 +42,13 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
               {pathSegments.map((segment, index) => (
                 <React.Fragment key={index}>
                   <span className="text-sm">
-                    <ChevronRight />
+                    <IconChevronRight />
                   </span>
-                  <Link href={`/${pathSegments.slice(0, index + 1).join("/")}`}>
+                  <p className="text-base font-semibold">
                     <span className="text-base capitalize hover:text-primary transition">
                       {segment.replace(/-/g, " ")}
                     </span>
-                  </Link>
+                  </p>
                 </React.Fragment>
               ))}
             </div>
@@ -54,86 +58,81 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
                 aria-label="open sidebar"
                 className="btn btn-square btn-ghost"
               >
-                <AlignJustify className="h-6 w-6" />
+                <IconMenu className="h-6 w-6 text-base-content" />
               </label>
             </div>
 
             <div className="flex-1 justify-between lg:hidden px-2">
-              <h1 className="text-xl font-bold text-base-content">
-                FlatFinder
-              </h1>
+              <Link
+                href="/admin/dashboard"
+                className="flex h-16 w-full flex-row items-center justify-center space-x-3 border-b border-base-content md:justify-start md:px-6"
+              >
+                <span className="h-7 w-7 rounded-lg bg-base-200">
+                  <IconHome size={28} className="text-base-content" />
+                </span>
+                <span className="text-xl font-bold text-base-content">
+                  <h1 className="text-xl font-bold">
+                    <span className="text-primary font-extrabold text-xl">
+                      Flat
+                    </span>
+                    <span className="text-secondary font-extrabold text-xl">
+                      Finder
+                    </span>
+                  </h1>
+                </span>
+              </Link>
               <ThemeToggler />
             </div>
 
             <div className="hidden lg:block">
-              <ul className="menu menu-horizontal">
+              <ul className="menu menu-horizontal flex items-center space-x-4">
                 <ThemeToggler />
-                <div className="flex items-center gap-4 bg-transparent">
-                  <div className="dropdown dropdown-left cursor-pointer bg-transparent">
-                    <div tabIndex={0} role="button" className="btn m-1 w-full">
-                      <Image
-                        src={user.profilePicture}
-                        alt="Avatar"
-                        className="h-12 w-12"
-                        width={48}
-                        height={48}
-                      />
+                <div className="dropdown dropdown-left cursor-pointer bg-transparent">
+                  <Image
+                    src={user.profilePicture}
+                    alt="Avatar"
+                    className="rounded-full"
+                    width={40}
+                    height={40}
+                    tabIndex={0}
+                    role="button"
+                  />
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-72 p-2 shadow"
+                  >
+                    <div className="flex items-center justify-center mb-2">
+                      <div className="flex items-center justify-center w-12 h-12 bg-primary text-base-conten rounded-full text-xl font-bold">
+                        {user.name[0].toUpperCase()}
+                      </div>
                     </div>
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content menu bg-base-100 rounded-box z-[1] w-72 p-2 shadow"
-                    >
-                      {/* User Initial */}
-                      <div className="flex items-center justify-center mb-2">
-                        <div className="flex items-center justify-center w-12 h-12 bg-primary text-base-conten rounded-full text-xl font-bold">
-                          {user.name.charAt(0).toUpperCase()}
-                        </div>
-                      </div>
 
-                      <div className="flex items-center justify-center">
-                        <span className="text-lg font-semibold">
-                          {user.email}
-                        </span>
-                      </div>
-                      <hr className="my-2 border-base-content" />
-                      <div className="flex flex-col">
-                        <button
-                          onClick={() => router.push("/account")}
-                          className="text-left px-4 py-2 text-base text-dark hover:bg-base-200 transition duration-200"
-                        >
-                          My Account
-                        </button>
-                        <button
-                          onClick={() => router.push("/profile")}
-                          className="text-left px-4 py-2 text-base text-dark hover:bg-base-200 transition duration-200"
-                        >
-                          Profile
-                        </button>
-                        <button
-                          onClick={handleLogout}
-                          className="text-left px-4 py-2 text-base text-dark hover:bg-base-200 transition duration-200"
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    </ul>
-                  </div>
+                    <div className="flex items-center justify-center">
+                      <span className="text-lg font-semibold text-base-content">
+                        {user.name}
+                      </span>
+                    </div>
+                    <hr className="my-2 border-base-content" />
+                    <div className="flex flex-col">
+                      <button
+                        onClick={handleLogout}
+                        className="text-left px-4 py-2 text-base-content text-dark hover:bg-base-200 transition duration-200"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </ul>
                 </div>
               </ul>
             </div>
           </div>
           <div>
             {" "}
-            <div className="flex flex-1">
-              <main className="flex-1 overflow-y-auto relative max-h-screen">
-                <div className="relative">
-                  <main className="overflow-x-auto">{children}</main>
-                </div>
-              </main>
-            </div>
+            <main className="overflow-y-auto h-[calc(100vh-5rem)] bg-base-100 p-10 text-base-content">
+              {children}
+            </main>
           </div>
         </div>
-
         <div className="drawer-side">
           <label
             htmlFor="my-drawer-3"
@@ -142,14 +141,21 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
           ></label>
           <div className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
             <Link
-              href={`/${user.role}/dashboard`}
+              href="/admin/dashboard"
               className="flex h-16 w-full flex-row items-center justify-center space-x-3 border-b border-base-content md:justify-start md:px-6"
             >
               <span className="h-7 w-7 rounded-lg bg-base-200">
-                <Home size={28} />
+                <IconHome size={28} className="text-base-content" />
               </span>
               <span className="text-xl font-bold text-base-content">
-                FlatFinder
+                <h1 className="text-xl font-bold">
+                  <span className="text-primary font-extrabold text-xl">
+                    Flat
+                  </span>
+                  <span className="text-secondary font-extrabold text-xl">
+                    Finder
+                  </span>
+                </h1>
               </span>
             </Link>
             <div className="flex flex-col space-y-2 mt-10 md:px-6">
@@ -199,7 +205,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                 subMenuOpen ? "rotate-180" : ""
               } flex`}
             >
-              <ChevronDown width="24" height="24" />
+              <IconChevronDown width="24" height="24" />
             </div>
           </button>
 

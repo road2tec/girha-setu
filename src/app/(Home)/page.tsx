@@ -2,18 +2,34 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IconCircleChevronRight } from "@tabler/icons-react";
 
 const Hero = () => {
-  const propertyTypes = ["Apartment", "House", "Villa", "Penthouse", "Studio"];
-  const locations = [
-    "Delhi",
-    "Mumbai",
-    "Bangalore",
-    "Hyderabad",
-    "Chennai",
-    "Pune",
+  const [flats, setFlats] = useState([]);
+  useEffect(() => {
+    const fetchFlats = async () => {
+      try {
+        const response = await fetch("/api/listings/allListings");
+        const data = await response.json();
+        setFlats(data.flats);
+      } catch (error) {
+        console.error("Error fetching flats:", error);
+      }
+    };
+    fetchFlats();
+  }, []);
+  const propertyTypes = [
+    "Apartment",
+    "House",
+    "Villa",
+    "Penthouse",
+    "Studio",
+    "Office",
+    "Building",
+    "Townhouse",
+    "Shop",
+    "Garage",
   ];
   const router = useRouter();
   const [filters, setFilters] = useState({
@@ -21,57 +37,48 @@ const Hero = () => {
     propertyType: "",
     location: "",
   });
-  const text = [
-    "घर की तलाश ? अब हुई आसान ! 🏡",
-    "सही घर, सही दाम, सही समय ! ⏳",
-    "आपका सपना... हमारी जिम्मेदारी ! ✨",
-    "खोजें, पसंद करें, और बस जाएँ ! 🚪",
-    "GrihaSetu - घर खोजने का नया तरीका ! 🔍",
-  ];
   const propertyType = [
     {
       name: "Apartment",
       image: "img/icon-apartment.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "Apartment").length,
     },
     {
       name: "Villa",
       image: "img/icon-villa.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "Villa").length,
     },
     {
-      name: "Home",
+      name: "House",
       image: "img/icon-house.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "House").length,
     },
     {
       name: "Office",
       image: "img/icon-housing.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "Office").length,
     },
     {
       name: "Building",
       image: "img/icon-building.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "Building").length,
     },
     {
       name: "Townhouse",
       image: "img/icon-neighborhood.png",
+      count: flats.filter((flat: any) => flat.type === "Townhouse").length,
     },
     {
       name: "Shop",
       image: "img/icon-condominium.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "Shop").length,
     },
     {
       name: "Garage",
       image: "img/icon-luxury.png",
-      count: 123,
+      count: flats.filter((flat: any) => flat.type === "Garage").length,
     },
   ];
-  const handleChange = (e: any) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
 
   const handleSearch = (e: any) => {
     e.preventDefault();
@@ -97,14 +104,14 @@ const Hero = () => {
               easier, smarter, and more intuitive.
             </p>
             <a
-              href="#"
+              href="/login"
               className="btn btn-primary text-base font-medium text-center rounded-lg mr-4"
             >
               Register to Get Started
               <IconCircleChevronRight />
             </a>
             <a
-              href="#"
+              href="/about"
               className="btn btn-outline text-base font-medium text-center rounded-lg mr-4"
             >
               Learn More
@@ -122,21 +129,42 @@ const Hero = () => {
               onSubmit={handleSearch}
               className="w-full px-10 py-4 flex flex-wrap justify-between items-center gap-4"
             >
-              {/* Search Keyword */}
               <input
                 type="text"
-                name="keyword"
                 value={filters.keyword}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFilters({ ...filters, keyword: e.target.value })
+                }
                 className="input w-1/4 h-16 py-4 px-6 bg-base-content text-base-300 text-lg placeholder:text-base-300"
-                placeholder="Search Keyword"
+                placeholder="Search for amenities..."
+                list="amenities"
               />
+              <datalist id="amenities">
+                {[
+                  "Parking",
+                  "Swimming Pool",
+                  "Gym",
+                  "Balcony",
+                  "Security",
+                  "Power Backup",
+                  "WiFi",
+                  "Garden",
+                  "Air Conditioning",
+                  "Furnished",
+                ].map((amenity) => (
+                  <option value={amenity} key={amenity}>
+                    {amenity}
+                  </option>
+                ))}
+              </datalist>
 
               {/* Property Type Dropdown */}
               <select
                 name="propertyType"
                 value={filters.propertyType}
-                onChange={handleChange}
+                onChange={(e) => {
+                  setFilters({ ...filters, propertyType: e.target.value });
+                }}
                 className="input w-1/4 h-16 py-4 px-6 bg-base-content text-base-300 text-lg placeholder:text-base-300"
               >
                 <option value="">What type of property?</option>
@@ -148,19 +176,17 @@ const Hero = () => {
               </select>
 
               {/* Location Dropdown */}
-              <select
+              <input
                 name="location"
                 value={filters.location}
-                onChange={handleChange}
+                onChange={(e) => {
+                  setFilters({
+                    ...filters,
+                    location: e.target.value.toLowerCase(),
+                  });
+                }}
                 className="input w-1/4 h-16 py-4 px-6 bg-base-content text-base-300 text-lg placeholder:text-base-300"
-              >
-                <option value="">Where do you want?</option>
-                {locations.map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-              </select>
+              />
 
               {/* Search Button */}
               <button
@@ -173,14 +199,16 @@ const Hero = () => {
           </div>
         </div>
       </section>
-      <section className="pt-24 px-10">
+      <section className="pt-24 px-10 mb-32">
         <div className="max-w-screen-md flex items-center justify-center flex-col gap-2 mx-auto mb-5">
-          <h1 className="text-3xl text-center font-bold">Property Types</h1>
+          <h1 className="text-3xl text-center font-bold uppercase">
+            Property Types
+          </h1>
           <p className="text-center text-base text-base-content">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem
-            similique commodi consectetur repellat, eos iure soluta veniam non.
-            Atque nihil expedita possimus earum est aliquid veritatis esse
-            delectus obcaecati omnis.
+            Discover your ideal living space with Flat Finder — your trusted
+            companion in locating affordable, verified flats across your desired
+            location. Whether you're a student, working professional, or family,
+            we make the house-hunting process smooth, reliable, and hassle-free.
           </p>
         </div>
         <div className="grid grid-cols-4 gap-4 mt-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -189,7 +217,10 @@ const Hero = () => {
               className="hover:bg-base-200 h-56 flex items-center justify-center rounded-md border border-base-content"
               key={index}
             >
-              <a className="block text-center rounded p-3" href="">
+              <a
+                className="block text-center rounded p-3"
+                href={`/properties?type=${type.name}`}
+              >
                 <div className="rounded p-4">
                   <div className="mb-3 ">
                     <Image

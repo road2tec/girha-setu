@@ -11,7 +11,7 @@ const NotFound = () => {
         The page you are looking for does not exist.
       </p>
 
-      <Link href="/" className="btn btn-primary mt-6">
+      <Link href="/admin/dashboard" className="btn btn-primary mt-6">
         Go to Home
       </Link>
     </div>

@@ -110,7 +110,7 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
                     <div className="flex flex-col">
                       <Link
                         className="text-left px-4 py-2 text-base-content hover:bg-base-200 transition duration-200"
-                        href={`/user/my-account`}
+                        href={`/buyer/my-account`}
                       >
                         My Account
                       </Link>

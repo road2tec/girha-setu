@@ -36,7 +36,6 @@ const AddListing = () => {
     setListing((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle address input
   const handleAddressChange = (e: any) => {
     const { name, value } = e.target;
     setListing((prev) => ({
@@ -151,25 +150,6 @@ const AddListing = () => {
         success: "Property listed successfully!",
         error: "An error occurred while listing property.",
       });
-      //   setListing({
-      //     title: "",
-      //     description: "",
-      //     price: "",
-      //     type: "",
-      //     bedrooms: "",
-      //     bathrooms: "",
-      //     area: "",
-      //     amenities: [],
-      //     images: [],
-      //     address: {
-      //       address: "",
-      //       city: "",
-      //       state: "",
-      //       country: "",
-      //       postalCode: "",
-      //       coordinates: [0, 0],
-      //     },
-      //   });
     } catch (error) {
       toast.error("An error occurred while listing property.");
       console.log(error);
@@ -185,7 +165,6 @@ const AddListing = () => {
         onSubmit={handleSubmit}
         className="space-y-4 border border-base-content p-10 rounded-md"
       >
-        {/* Title */}
         <label className="form-control w-full">
           <div className="label">
             <span className="label-text font-medium">Title</span>
@@ -244,12 +223,23 @@ const AddListing = () => {
               className="select select-bordered w-full"
               required
             >
-              <option value="">Select Type</option>
-              <option value="Apartment">Apartment</option>
-              <option value="House">House</option>
-              <option value="Villa">Villa</option>
-              <option value="Penthouse">Penthouse</option>
-              <option value="Studio">Studio</option>
+              <option value="">Select Property Type</option>
+              {[
+                "Apartment",
+                "House",
+                "Villa",
+                "Penthouse",
+                "Studio",
+                "Office",
+                "Building",
+                "Townhouse",
+                "Shop",
+                "Garage",
+              ].map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
           </label>
         </div>
@@ -268,6 +258,8 @@ const AddListing = () => {
               "Power Backup",
               "WiFi",
               "Garden",
+              "Air Conditioning",
+              "Furnished",
             ].map((amenity) => (
               <label className="form-control" key={amenity}>
                 <div className="label">
@@ -374,23 +366,21 @@ const AddListing = () => {
             <div className="label">
               <span className="label-text font-medium">City</span>
             </div>
-            <select
+            <input
               name="city"
               value={listing.address.city}
-              onChange={handleAddressChange}
+              onChange={(e) => {
+                setListing({
+                  ...listing,
+                  address: {
+                    ...listing.address,
+                    city: e.target.value.toLowerCase(),
+                  },
+                });
+              }}
               className="input input-bordered w-full"
               required
-            >
-              <option defaultChecked>Select Your Location</option>
-              {listing.address.state &&
-                popularCitiesOrDistricts[listing.address.state].map(
-                  (city: string) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  )
-                )}
-            </select>
+            />
           </label>
         </div>
 

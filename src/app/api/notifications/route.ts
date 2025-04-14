@@ -10,15 +10,17 @@ export async function GET(req: NextRequest) {
   }
   try {
     const data = jwt.verify(token, process.env.JWT_SECRET!);
-    const user = await User.findById(data._id)
-      .populate("notifications")
-      .populate({
-        path: "notifications",
+    const user = await User.findById(data._id).populate({
+      path: "notifications",
+      populate: {
+        path: "property",
+        model: "Flat",
         populate: {
-          path: "property",
-          model: "Flat",
+          path: "location",
+          model: "Address",
         },
-      });
+      },
+    });
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }

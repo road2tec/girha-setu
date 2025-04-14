@@ -4,23 +4,23 @@ const services = [
   {
     title: "Verified Listings",
     description: "All properties are verified for authenticity and security.",
-    image: "https://source.unsplash.com/600x400/?house,keys",
+    image: "verified.png",
   },
   {
     title: "Secure Transactions",
     description: "Safe and seamless payment process for all users.",
-    image: "https://source.unsplash.com/600x400/?money,security",
+    image: "transaction.jpg",
   },
   {
     title: "24/7 Customer Support",
     description: "We are available round the clock to assist you.",
-    image: "https://source.unsplash.com/600x400/?customer,service",
+    image: "24-7.png",
   },
   {
     title: "Easy Search & Filters",
     description:
       "Find the perfect rental home with advanced filtering options.",
-    image: "https://source.unsplash.com/600x400/?search,home",
+    image: "search.png",
   },
 ];
 
@@ -38,12 +38,12 @@ const Services = () => {
         {services.map((service, index) => (
           <div
             key={index}
-            className="card bg-base-100 shadow-lg p-4 rounded-lg"
+            className="card bg-base-300 shadow-lg p-4 rounded-lg"
           >
             <img
               src={service.image}
               alt={service.title}
-              className="w-full h-40 object-cover rounded-md"
+              className="w-full h-40 object-contain rounded-md"
             />
             <h2 className="text-xl font-semibold text-secondary mt-4">
               {service.title}

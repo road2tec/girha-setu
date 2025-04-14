@@ -39,12 +39,6 @@ const UserSchema = new mongoose.Schema(
       ref: "Address",
       required: true,
     },
-    searchHistory: [
-      {
-        query: String,
-        timestamp: { type: Date, default: Date.now },
-      },
-    ],
     notifications: [
       {
         type: mongoose.Schema.Types.ObjectId,

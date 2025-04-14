@@ -7,6 +7,7 @@ import {
   SettingsIcon,
 } from "lucide-react";
 import { SideNavItem } from "@/types/types";
+import { IconFlagQuestion } from "@tabler/icons-react";
 
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
@@ -30,13 +31,18 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <MessageSquareIcon width="24" height="24" />,
   },
   {
+    title: "Bookings",
+    path: "/owner/bookings",
+    icon: <ListIcon width="24" height="24" />,
+  },
+  {
     title: "Notifications",
     path: "/owner/notifications",
     icon: <BellIcon width="24" height="24" />,
   },
   {
-    title: "Settings",
-    path: "/owner/settings",
-    icon: <SettingsIcon width="24" height="24" />,
+    title: "FAQ",
+    path: "/owner/faq",
+    icon: <IconFlagQuestion width="24" height="24" />,
   },
 ];

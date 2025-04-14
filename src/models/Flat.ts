@@ -16,7 +16,18 @@ const FlatSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["Apartment", "House", "Villa", "Penthouse", "Studio"],
+      enum: [
+        "Apartment",
+        "House",
+        "Villa",
+        "Penthouse",
+        "Studio",
+        "Office",
+        "Building",
+        "Townhouse",
+        "Shop",
+        "Garage",
+      ],
       required: true,
     },
     location: {
@@ -46,6 +57,8 @@ const FlatSchema = new mongoose.Schema(
           "Power Backup",
           "WiFi",
           "Garden",
+          "Air Conditioning",
+          "Furnished",
         ],
       },
     ],
@@ -57,35 +70,24 @@ const FlatSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    availability: {
-      type: Boolean,
-      default: true,
-    },
-    bookings: [
+    rating: [
       {
-        startDate: {
-          type: Date,
-          required: true,
-        },
-        endDate: {
-          type: Date,
-          required: true,
-        },
         user: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
-          required: true,
         },
-      },
-    ],
-    favoritesCount: {
-      type: Number,
-      default: 0,
-    },
-    rating: [
-      {
-        type: Number,
-        default: 0,
+        rating: {
+          type: Number,
+          min: 1,
+          max: 5,
+        },
+        comment: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
     createdAt: {
@@ -96,7 +98,6 @@ const FlatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Enable geospatial queries
 FlatSchema.index({ "location.coordinates": "2dsphere" });
 FlatSchema.index({ title: "text", description: "text", location: "text" });
 

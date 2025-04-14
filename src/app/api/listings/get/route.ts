@@ -8,7 +8,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Missing user id" }, { status: 400 });
   }
   try {
-    const flat = await Flat.findById(id).populate("location").populate("owner");
+    const flat = await Flat.findById(id)
+      .populate("location")
+      .populate("owner")
+      .populate("rating.user");
     return NextResponse.json({ flat }, { status: 200 });
   } catch (error) {
     console.log(error);

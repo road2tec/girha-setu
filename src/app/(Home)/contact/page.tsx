@@ -1,39 +1,67 @@
 "use client";
 
 import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = axios.post("/api/contact/addContact", { formData });
+    toast.promise(res, {
+      loading: "Sending...",
+      success: "Message sent successfully!",
+      error: "Something went wrong!",
+    });
+  };
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-primary">Contact Us</h1>
-        <p className="text-lg text-base-content/70 mt-3">
-          Have questions? Reach out to us, and we’ll be happy to help.
-        </p>
-      </div>
+    <div className="bg-base-100 max-h-[calc(100vh-6rem)] flex items-center flex-col px-10 overflow-y-hidden">
+      <h1 className="text-4xl font-bold text-primary uppercase my-auto mt-6">
+        Contact Us
+      </h1>
+      <p className="text-lg text-base-content/70 mt-3 mb-12">
+        Have questions? Reach out to us, and we’ll be happy to help.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Contact Form */}
         <div className="bg-base-200 p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-secondary mb-4">
             Send Us a Message
           </h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Your Name"
-              className="input input-bordered w-full mb-4"
+              className="input input-primary input-bordered w-full mb-4"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               required
             />
             <input
               type="email"
               placeholder="Your Email"
-              className="input input-bordered w-full mb-4"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="input input-primary input-bordered w-full mb-4"
               required
             />
             <textarea
               placeholder="Your Message"
-              className="textarea textarea-bordered w-full mb-4"
+              value={formData.message}
+              onChange={(e) =>
+                setFormData({ ...formData, message: e.target.value })
+              }
+              className="textarea textarea-primary textarea-bordered w-full mb-4"
               rows={4}
               required
             ></textarea>

@@ -12,11 +12,11 @@ const EditPage = () => {
   const [listing, setListing] = useState({
     title: "",
     description: "",
-    price: "",
+    price: 0,
     type: "",
-    bhks: "",
-    area: "",
-    amenities: [],
+    bhks: 0,
+    area: 0,
+    amenities: [""],
     mainImage: "",
     images: [],
     location: {
@@ -27,7 +27,7 @@ const EditPage = () => {
       postalCode: "",
       coordinates: {
         type: "Point",
-        coordinates: [0, 0],
+        coordinates: [0.0, 0.0],
       },
     },
   });
@@ -37,26 +37,11 @@ const EditPage = () => {
   const fetchFlat = async () => {
     const response = await axios.get(`/api/listings/get?id=${id}`);
     setListing(response.data.flat);
-    console.log(response.data.flat);
-  };
-  // Handle input changes
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setListing((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Handle address input
-  const handleAddressChange = (e: any) => {
-    const { name, value } = e.target;
-    setListing((prev) => ({
-      ...prev,
-      address: { ...prev.address, [name]: value },
-    }));
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const response = axios.put("/api/listings/edit", { listing });
+    const response = axios.patch("/api/listings/edit", { listing });
     toast.promise(response, {
       loading: "Updating Listing...",
       success: "Listing Updated Successfully",
@@ -64,15 +49,16 @@ const EditPage = () => {
     });
   };
 
-  // Handle geolocation API
   const fetchLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log("Latitude:", position.coords.latitude);
+          console.log("Longitude:", position.coords.longitude);
           setListing((prev) => ({
             ...prev,
             address: {
-              ...prev.address,
+              ...prev.location,
               coordinates: {
                 type: "Point",
                 coordinates: [
@@ -82,11 +68,13 @@ const EditPage = () => {
               },
             },
           }));
+          toast.success("Location fetched successfully!");
         },
         (error) => console.error("Geolocation error:", error)
       );
+      console.log(listing);
     } else {
-      alert("Geolocation is not supported by your browser.");
+      toast.error("Geolocation is not supported by this browser.");
     }
   };
 
@@ -102,31 +90,31 @@ const EditPage = () => {
         </div>
         <input
           type="text"
-          name="title"
           value={listing.title}
-          onChange={handleChange}
+          onChange={(e) => {
+            setListing({ ...listing, title: e.target.value });
+          }}
           className="input input-bordered w-full"
           placeholder="Enter property title"
           required
         />
       </label>
 
-      {/* Description */}
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text font-medium">Description</span>
         </div>
         <textarea
-          name="description"
           value={listing.description}
-          onChange={handleChange}
+          onChange={(e) => {
+            setListing({ ...listing, description: e.target.value });
+          }}
           className="textarea textarea-bordered w-full"
           placeholder="Enter property description"
           required
         />
       </label>
 
-      {/* Price & Type */}
       <div className="grid grid-cols-2 gap-4">
         <label className="form-control w-full">
           <div className="label">
@@ -134,9 +122,10 @@ const EditPage = () => {
           </div>
           <input
             type="number"
-            name="price"
             value={listing.price}
-            onChange={handleChange}
+            onChange={(e) => {
+              setListing({ ...listing, price: parseInt(e.target.value) });
+            }}
             className="input input-bordered w-full"
             min={0}
             required
@@ -148,18 +137,30 @@ const EditPage = () => {
             <span className="label-text font-medium">Property Type</span>
           </div>
           <select
-            name="type"
             value={listing.type}
-            onChange={handleChange}
+            onChange={(e) => {
+              setListing({ ...listing, type: e.target.value });
+            }}
             className="select select-bordered w-full"
             required
           >
-            <option value="">Select Type</option>
-            <option value="Apartment">Apartment</option>
-            <option value="House">House</option>
-            <option value="Villa">Villa</option>
-            <option value="Penthouse">Penthouse</option>
-            <option value="Studio">Studio</option>
+            <option value="">Select Property Type</option>
+            {[
+              "Apartment",
+              "House",
+              "Villa",
+              "Penthouse",
+              "Studio",
+              "Office",
+              "Building",
+              "Townhouse",
+              "Shop",
+              "Garage",
+            ].map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
           </select>
         </label>
       </div>
@@ -178,6 +179,8 @@ const EditPage = () => {
             "Power Backup",
             "WiFi",
             "Garden",
+            "Air Conditioning",
+            "Furnished",
           ].map((amenity) => (
             <label className="form-control" key={amenity}>
               <div className="label">
@@ -217,7 +220,12 @@ const EditPage = () => {
           type="text"
           name="address"
           value={listing.location?.address}
-          onChange={handleAddressChange}
+          onChange={(e) => {
+            setListing({
+              ...listing,
+              location: { ...listing.location, address: e.target.value },
+            });
+          }}
           placeholder="Address"
           className="input input-bordered w-full"
           required
@@ -234,7 +242,9 @@ const EditPage = () => {
             type="number"
             name="bhks"
             value={listing.bhks}
-            onChange={handleChange}
+            onChange={(e) => {
+              setListing({ ...listing, bhks: parseInt(e.target.value) });
+            }}
             className="input input-bordered w-full"
             min={1}
             required
@@ -248,7 +258,9 @@ const EditPage = () => {
             type="number"
             name="area"
             value={listing.area}
-            onChange={handleChange}
+            onChange={(e) => {
+              setListing({ ...listing, area: parseInt(e.target.value) });
+            }}
             className="input input-bordered w-full"
             min={100}
             required
@@ -256,7 +268,6 @@ const EditPage = () => {
         </label>
       </div>
 
-      {/* Address Inputs */}
       <div className="grid grid-cols-2 gap-4">
         <label htmlFor="">
           <div className="label">
@@ -287,7 +298,12 @@ const EditPage = () => {
           <select
             name="city"
             value={listing.location?.city}
-            onChange={handleAddressChange}
+            onChange={(e) => {
+              setListing({
+                ...listing,
+                location: { ...listing.location, city: e.target.value },
+              });
+            }}
             className="input input-bordered w-full"
             required
           >
@@ -304,7 +320,6 @@ const EditPage = () => {
         </label>
       </div>
 
-      {/* Country and postal code */}
       <div className="grid grid-cols-2 gap-4">
         <label htmlFor="" className="form-control w-full">
           <div className="label">
@@ -327,7 +342,12 @@ const EditPage = () => {
             type="text"
             name="postalCode"
             value={listing.location?.postalCode}
-            onChange={handleAddressChange}
+            onChange={(e) => {
+              setListing({
+                ...listing,
+                location: { ...listing.location, postalCode: e.target.value },
+              });
+            }}
             placeholder="Postal Code"
             className="input input-bordered w-full"
             required
@@ -335,7 +355,6 @@ const EditPage = () => {
         </label>
       </div>
 
-      {/* Geolocation Button */}
       <button
         type="button"
         className="btn btn-outline w-full"
@@ -344,9 +363,8 @@ const EditPage = () => {
         Use My Current Location
       </button>
 
-      {/* Submit Button */}
       <button type="submit" className="btn btn-primary w-full">
-        {"List Property"}
+        Update Listing
       </button>
     </form>
   );

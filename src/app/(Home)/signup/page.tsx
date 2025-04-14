@@ -118,7 +118,7 @@ const SignUpPage = () => {
           router.push("/signin");
           return res.data.message;
         },
-        error: (res: unknown) => {
+        error: (res: any) => {
           return res.response.data.message;
         },
       })
