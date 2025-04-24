@@ -15,6 +15,9 @@ import {
   IconChevronRight,
   IconHome,
   IconMenu,
+  IconBell,
+  IconLogout,
+  IconUser,
 } from "@tabler/icons-react";
 
 const SideNav = ({ children }: { children: React.ReactNode }) => {
@@ -39,124 +42,126 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
       <div className="drawer lg:drawer-open max-h-screen">
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
-          <div className="navbar justify-between bg-base-300 w-full pl-10">
-            <div className="lg:flex items-center justify-end space-x-2 hidden text-base-content">
-              <span className="text-base font-semibold">Home</span>
-              {pathSegments.map((segment, index) => (
-                <React.Fragment key={index}>
-                  <span className="text-sm">
-                    <IconChevronRight />
-                  </span>
-                  <Link href={`/${pathSegments.slice(0, index + 1).join("/")}`}>
-                    <span className="text-base capitalize hover:text-primary transition">
-                      {segment.replace(/-/g, " ")}
-                    </span>
-                  </Link>
-                </React.Fragment>
-              ))}
-            </div>
+          {/* Top Navigation */}
+          <div className="navbar bg-base-100 border-b border-base-200/80 px-6 py-3">
             <div className="flex-none lg:hidden">
               <label
                 htmlFor="my-drawer-3"
                 aria-label="open sidebar"
                 className="btn btn-square btn-ghost"
               >
-                <IconMenu className="h-6 w-6 text-base-content" />
+                <IconMenu className="h-6 w-6" />
               </label>
             </div>
 
-            <div className="flex-1 justify-between lg:hidden px-2">
-              <h1 className="text-xl font-bold flex items-center">
-                <span className="h-7 w-7 ">
-                  <IconHome size={28} className="text-base-content" />
+            <div className="flex-1">
+              <div className="hidden lg:flex items-center space-x-2 text-base-content/70">
+                <Link href="/buyer/dashboard" className="hover:text-primary transition-colors">
+                  Home
+                </Link>
+                {pathSegments.map((segment, index) => (
+                  <React.Fragment key={index}>
+                    <IconChevronRight className="w-4 h-4" />
+                    <Link 
+                      href={`/${pathSegments.slice(0, index + 1).join("/")}`}
+                      className="capitalize hover:text-primary transition-colors"
+                    >
+                      {segment.replace(/-/g, " ")}
+                    </Link>
+                  </React.Fragment>
+                ))}
+              </div>
+              
+              <div className="lg:hidden flex items-center">
+                <IconHome className="w-6 h-6 text-primary mr-2" />
+                <span className="text-xl font-bold">
+                  <span className="text-primary">Flat</span>
+                  <span className="text-secondary">Finder</span>
                 </span>
-                <span className="text-primary">Flat</span>
-                <span className="text-secondary">Finder</span>
-              </h1>
-              <ThemeToggler />
+              </div>
             </div>
 
-            <div className="hidden lg:block">
-              <ul className="menu menu-horizontal flex items-center space-x-4">
-                <Notification />
-                <ThemeToggler />
-                <div className="dropdown dropdown-left cursor-pointer bg-transparent">
+            <div className="flex items-center gap-3">
+              <ThemeToggler />
+              <Notification />
+              
+              <div className="dropdown dropdown-end">
+                <div 
+                  tabIndex={0} 
+                  role="button" 
+                  className="flex items-center gap-2 p-2 hover:bg-base-200 rounded-lg cursor-pointer transition-colors"
+                >
                   <Image
                     src={user.profilePicture!}
                     alt="Avatar"
                     className="rounded-full"
-                    width={40}
-                    height={40}
-                    tabIndex={0}
-                    role="button"
+                    width={32}
+                    height={32}
                   />
-                  <ul
-                    tabIndex={0}
-                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-72 p-2 shadow"
-                  >
-                    {/* User Initial */}
-                    <div className="flex items-center justify-center mb-2">
-                      <div className="flex items-center justify-center w-12 h-12 bg-primary text-base-conten rounded-full text-xl font-bold">
-                        {user.name[0].toUpperCase()}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center">
-                      <span className="text-lg font-semibold text-base-content">
-                        {user.name}
-                      </span>
-                    </div>
-                    <hr className="my-2 border-base-content" />
-                    <div className="flex flex-col">
-                      <Link
-                        className="text-left px-4 py-2 text-base-content hover:bg-base-200 transition duration-200"
-                        href={`/buyer/my-account`}
-                      >
-                        My Account
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="text-left px-4 py-2 text-base-content text-dark hover:bg-base-200 transition duration-200"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </ul>
+                  <span className="hidden lg:block font-medium">{user.name}</span>
+                  <IconChevronDown className="w-4 h-4" />
                 </div>
-              </ul>
+                
+                <ul tabIndex={0} className="dropdown-content menu bg-base-100 w-56 p-2 shadow-lg rounded-box mt-2">
+                  <li className="menu-title">
+                    <span className="text-xs font-semibold uppercase text-base-content/50">Account</span>
+                  </li>
+                  <li>
+                    <Link href="/buyer/my-account" className="gap-2">
+                      <IconUser className="w-4 h-4" />
+                      My Profile
+                    </Link>
+                  </li>
+                  <div className="divider my-1"></div>
+                  <li>
+                    <button onClick={handleLogout} className="text-error gap-2">
+                      <IconLogout className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-          <div>
-            {" "}
-            <main className="overflow-y-auto h-[calc(100vh-5.3rem)] bg-base-100 p-10 text-base-content">
-              {children}
-            </main>
-          </div>
+
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto bg-base-100 p-4 lg:p-6">
+            <div className="max-w-[1600px] mx-auto lg:pl-10">
+              <div className="w-full h-full">
+                {children}
+              </div>
+            </div>
+          </main>
         </div>
-        <div className="drawer-side">
-          <label
-            htmlFor="my-drawer-3"
-            className="drawer-overlay"
-            aria-label="close sidebar"
-          ></label>
-          <div className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-            <Link
-              href="/user/dashboard"
-              className="flex h-16 w-full flex-row items-center justify-center space-x-3 border-b border-base-content md:justify-start md:px-6"
-            >
-              <span className="h-7 w-7 rounded-lg bg-base-200">
-                <IconHome size={28} className="text-base-content" />
-              </span>
-              <span className="text-xl font-bold text-base-content">
-                <h1 className="text-xl font-bold">
+
+        {/* Side Navigation */}
+        <div className="drawer-side z-40">
+          <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
+          <div className="menu bg-base-100 w-64 min-h-full border-r-[2px] border-base-200/80">
+            {/* Logo */}
+            <div className="p-4 border-b border-base-200/80">
+              <Link href="/buyer/dashboard" className="flex items-center gap-2">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <IconHome className="w-5 h-5 text-primary" />
+                </div>
+                <span className="text-lg font-bold">
                   <span className="text-primary">Flat</span>
                   <span className="text-secondary">Finder</span>
-                </h1>
-              </span>
-            </Link>
-            <div className="flex flex-col space-y-2 mt-10 md:px-6">
+                </span>
+              </Link>
+            </div>
+
+            {/* Navigation Items */}
+            <div className="flex flex-col py-4">
               {SIDENAV_ITEMS.map((item, idx) => (
-                <MenuItem key={idx} item={item} />
+                <React.Fragment key={idx}>
+                  <MenuItem item={item} />
+                  {idx < SIDENAV_ITEMS.length - 1 && (
+                    <div className="px-4">
+                      <div className="h-px bg-base-200/80 my-2"></div>
+                    </div>
+                  )}
+                </React.Fragment>
               ))}
             </div>
           </div>
@@ -175,49 +180,42 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
     setSubMenuOpen(!subMenuOpen);
   };
 
-  const baseClasses =
-    "flex w-full flex-row items-center justify-between rounded-lg p-2 hover:bg-accent";
-  const activeClasses = "bg-base-300 text-base-content";
-  const inactiveClasses =
-    "text-base-content hover:text-base-content hover:bg-base-100";
+  const isActive = pathname === item.path || pathname.startsWith(item.path + '/');
 
   return (
-    <div>
+    <div className="px-3">
       {item.submenu ? (
         <>
           <button
             onClick={toggleSubMenu}
-            className={`${baseClasses} ${
-              pathname.includes(item.path) ? activeClasses : inactiveClasses
+            className={`flex items-center justify-between w-full p-2 rounded-lg transition-colors ${
+              isActive 
+                ? 'bg-primary text-primary-content' 
+                : 'hover:bg-base-200 text-base-content'
             }`}
           >
-            <div className="flex flex-row items-center space-x-4 text-base-content">
-              {item.icon}
-              <span className="text-lg font-medium">{item.title}</span>
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5">{item.icon}</div>
+              <span className="font-medium text-sm">{item.title}</span>
             </div>
-
-            <div
-              className={`transition-transform ${
-                subMenuOpen ? "rotate-180" : ""
-              } flex`}
-            >
-              <IconChevronDown width="24" height="24" />
-            </div>
+            <IconChevronDown 
+              className={`w-4 h-4 transition-transform ${subMenuOpen ? 'rotate-180' : ''}`}
+            />
           </button>
 
           {subMenuOpen && (
-            <div className="my-2 ml-4 flex flex-col space-y-4">
+            <div className="ml-4 mt-2 space-y-1 border-l-2 border-base-200 pl-2">
               {item.subMenuItems?.map((subItem, idx) => (
                 <Link
                   key={idx}
                   href={subItem.path}
-                  className={`block rounded-lg p-2 text-base ${
+                  className={`block px-4 py-2 rounded-lg text-xs transition-colors ${
                     subItem.path === pathname
-                      ? "font-semibold text-base-content"
-                      : "text-base-content/2"
-                  } hover:bg-accent`}
+                      ? 'bg-primary/10 text-primary font-medium'
+                      : 'text-base-content/70 hover:bg-base-200'
+                  }`}
                 >
-                  <span>{subItem.title}</span>
+                  {subItem.title}
                 </Link>
               ))}
             </div>
@@ -226,12 +224,14 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
       ) : (
         <Link
           href={item.path}
-          className={`flex flex-row items-center space-x-4 rounded-lg p-2 ${
-            item.path === pathname ? activeClasses : inactiveClasses
+          className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
+            isActive 
+              ? 'bg-primary text-primary-content' 
+              : 'hover:bg-base-200 text-base-content'
           }`}
         >
-          {item.icon}
-          <span className="text-lg font-medium">{item.title}</span>
+          <div className="w-5 h-5">{item.icon}</div>
+          <span className="font-medium text-sm">{item.title}</span>
         </Link>
       )}
     </div>
