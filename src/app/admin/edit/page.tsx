@@ -143,6 +143,8 @@ const EditPage = () => {
             }}
             className="select select-bordered w-full"
             required
+            aria-label="Select property type"
+            title="Property type selection"
           >
             <option value="">Select Property Type</option>
             {[

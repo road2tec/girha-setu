@@ -5,8 +5,31 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthProvider";
 import { popularCitiesOrDistricts, STATES_IN_INDIA } from "@/utils/constants";
 
+interface ListingState {
+  title: string;
+  description: string;
+  price: string;
+  type: string;
+  bhks: string;
+  area: string;
+  amenities: string[];
+  mainImage: string;
+  images: string[];
+  address: {
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    coordinates: {
+      type: "Point";
+      coordinates: [number, number];
+    };
+  };
+}
+
 const AddListing = () => {
-  const [listing, setListing] = useState({
+  const [listing, setListing] = useState<ListingState>({
     title: "",
     description: "",
     price: "",
@@ -44,40 +67,40 @@ const AddListing = () => {
     }));
   };
 
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File size exceeds 5MB");
       return;
     }
-    console.log(file);
+    
     const formData = new FormData();
-    formData.append("file", file as Blob);
+    formData.append("file", file);
+    
     const imageResponse = axios.post("/api/helper/upload-img", formData);
     toast.promise(imageResponse, {
       loading: "Uploading Image...",
       success: (data: AxiosResponse) => {
-        setListing({
-          ...listing,
+        setListing(prev => ({
+          ...prev,
           mainImage: data.data.data.url,
-        });
+        }));
         return "Image Uploaded Successfully";
       },
       error: (err: unknown) => `This just happened: ${err}`,
     });
   };
-  // Handle multi-image upload
-  const handleMultipleImageChange = async (e: any) => {
-    const files = Array.from(e.target.files);
+
+  const handleMultipleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    // Validate number of images
     if (files.length > 5) {
       toast.error("You can upload only 5 images at a time");
       return;
     }
-
-    const uploadedImages: string[] = [];
 
     for (const file of files) {
       if (file.size > 5 * 1024 * 1024) {
@@ -101,10 +124,7 @@ const AddListing = () => {
         );
 
         const imageUrl = response.data.data.secure_url;
-        uploadedImages.push(imageUrl);
-
-        // Update state after each upload
-        setListing((prev) => ({
+        setListing(prev => ({
           ...prev,
           images: [...prev.images, imageUrl],
         }));
@@ -352,7 +372,10 @@ const AddListing = () => {
                   address: { ...listing.address, state: e.target.value },
                 });
               }}
-              className="input input-bordered w-full"
+              className="select select-bordered w-full"
+              required
+              aria-label="Select state"
+              title="State selection"
             >
               <option defaultChecked>Select State</option>
               {STATES_IN_INDIA.map((state: string) => (
@@ -380,6 +403,8 @@ const AddListing = () => {
               }}
               className="input input-bordered w-full"
               required
+              aria-label="Select city"
+              title="City selection"
             />
           </label>
         </div>
