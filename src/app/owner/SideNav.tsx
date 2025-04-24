@@ -100,7 +100,7 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
                   <IconChevronDown className="w-4 h-4" />
                 </div>
                 
-                <ul tabIndex={0} className="dropdown-content menu bg-base-100 w-56 p-2 shadow-lg rounded-box mt-2">
+                <ul tabIndex={0} className="dropdown-content menu bg-base-100 w-56 p-2 shadow-lg rounded-box mt-2 z-50">
                   <li className="menu-title">
                     <span className="text-xs font-semibold uppercase text-base-content/50">Account</span>
                   </li>
@@ -124,7 +124,7 @@ const SideNav = ({ children }: { children: React.ReactNode }) => {
 
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto bg-base-100 p-4 lg:p-6">
-            <div className="max-w-[1600px] mx-auto lg:pl-64">
+            <div className="max-w-[1600px] mx-auto lg:pl-5">
               <div className="w-full h-full">
                 {children}
               </div>
