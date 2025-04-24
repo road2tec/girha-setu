@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const NotificationSchema = new Schema({
   property: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Property",
+    ref: "Flat",
   },
   message: {
     type: String,
