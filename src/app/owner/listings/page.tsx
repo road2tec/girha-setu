@@ -93,7 +93,7 @@ const ListingPage = () => {
     <div className="max-w-[1600px] mx-auto space-y-6 p-6 bg-base-200">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold text-base-content">My Listings</h1>
-        <Link href="/owner/add-property" className="btn btn-primary btn-sm flex items-center gap-2">
+        <Link href="/owner/add-listing" className="btn btn-primary btn-sm flex items-center gap-2">
           <IconPlus size={16} />
           Add New Property
         </Link>
