@@ -330,9 +330,9 @@ const ListingPage = () => {
                       alt={listing.title}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
-                    <span className="absolute top-3 right-3 bg-base-100/90 text-base-content px-2 py-1 rounded text-sm font-medium backdrop-blur-sm">
+                    {/* <span className="absolute top-3 right-3 bg-base-100/90 text-base-content px-2 py-1 rounded text-sm font-medium backdrop-blur-sm">
                       {Math.round(listing.distance!)} km
-                    </span>
+                    </span> */}
                   </figure>
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
