@@ -28,9 +28,9 @@ const Messages = () => {
       </h1>
       <div className="border rounded-md p-4">
         {users.length > 0 ? (
-          users.map((u: User) => (
+          users.map((u: User,i:number) => (
             <Link
-              key={u._id}
+              key={i}
               className="p-2 bg-base-200 flex justify-between items-center cursor-pointer hover:bg-base-300"
               href={`messages/${u._id}`}
             >

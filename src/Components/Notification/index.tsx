@@ -1,4 +1,4 @@
-import { Notification } from "@/types/Notification";
+import { Notification as N } from "@/types/Notification";
 import { IconBell } from "@tabler/icons-react";
 import axios from "axios";
 import Link from "next/link";
@@ -36,7 +36,7 @@ const Notification = () => {
           <li className="text-base-content">No new notifications</li>
         ) : (
           notifications &&
-          notifications.map((notification: Notification) => (
+          notifications.map((notification: N) => (
             <div
               key={notification._id}
               className="text-base-content btn btn-ghost"

@@ -309,7 +309,9 @@ const EditPage = () => {
           >
             <option defaultChecked>Select Your Location</option>
             {listing.location?.state &&
-              popularCitiesOrDistricts[listing.location.state].map(
+              popularCitiesOrDistricts[
+                listing.location.state as keyof typeof popularCitiesOrDistricts
+              ]?.map(
                 (city: string) => (
                   <option key={city} value={city}>
                     {city}

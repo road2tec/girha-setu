@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   }
   try {
     existingUser.favorites = existingUser.favorites.filter(
-      (favorite) => favorite.toString() !== listingId.toString()
+      (favorite : any) => favorite.toString() !== listingId.toString()
     );
     await existingUser.save();
     return NextResponse.json({ message: "Added to wishlist" }, { status: 200 });

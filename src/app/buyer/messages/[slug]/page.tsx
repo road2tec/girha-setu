@@ -35,6 +35,8 @@ const Chat = () => {
     startChat();
   }, [user]);
 
+  if (!user) return null;
+
   const sendMessage = async () => {
     if (!message.trim() || !chatId) return;
 
@@ -57,7 +59,7 @@ const Chat = () => {
           <div
             key={index}
             className={`chat ${
-              msg.sender === user._id ? "chat-end" : "chat-start"
+              msg.sender === (user?._id! as unknown as string) ? "chat-end" : "chat-start"
             }`}
           >
             <div className="chat-image avatar">
@@ -65,7 +67,7 @@ const Chat = () => {
                 <img
                   alt="avatar"
                   src={
-                    msg.sender === user._id
+                    msg.sender === (user?._id! as unknown as string)
                       ? user?.profilePicture
                       : owner?.profilePicture
                   }

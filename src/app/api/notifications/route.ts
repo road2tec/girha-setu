@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return new Response("Unauthorized", { status: 401 });
   }
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET!);
+    const data = jwt.verify(token, process.env.JWT_SECRET!) as any;
     const user = await User.findById(data._id).populate({
       path: "notifications",
       populate: {

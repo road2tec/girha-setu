@@ -7,7 +7,7 @@ dbConfig();
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
-  const data = jwt.verify(token!, process.env.JWT_SECRET!);
+  const data = jwt.verify(token!, process.env.JWT_SECRET!) as any;
   if (!token) {
     return NextResponse.json({ message: "Unautorized" }, { status: 401 });
   }

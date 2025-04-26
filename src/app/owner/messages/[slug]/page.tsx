@@ -57,7 +57,7 @@ const Chat = () => {
           <div
             key={index}
             className={`chat ${
-              msg.sender === user._id ? "chat-start" : "chat-end"
+              msg.sender === (user?._id! as unknown as string) ? "chat-start" : "chat-end"
             }`}
           >
             <div className="chat-image avatar">
@@ -65,7 +65,7 @@ const Chat = () => {
                 <img
                   alt="avatar"
                   src={
-                    msg.sender === user._id
+                    msg.sender === (user?._id! as unknown as string)
                       ? user?.profilePicture
                       : owner?.profilePicture
                   }

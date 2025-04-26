@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   if (!token) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 404 });
   }
-  const data = jwt.verify(token, process.env.JWT_SECRET!);
+  const data = jwt.verify(token, process.env.JWT_SECRET!) as any;
   if (!data) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 404 });
   }
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     );
 
     const users = chats.map((chat) => {
-      return chat.participants.find((user) => user._id.toString() !== data._id);
+      return chat.participants.find((user : any) => user._id.toString() !== data._id);
     });
     return NextResponse.json({ users }, { status: 200 });
   } catch (error) {

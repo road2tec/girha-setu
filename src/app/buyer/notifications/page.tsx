@@ -19,14 +19,14 @@ const Notifications = () => {
     }
   };
 
-  const deleteNotification = async (id) => {
+  const deleteNotification = async (id : any) => {
     if (!window.confirm("Are you sure you want to delete this notification?"))
       return;
     try {
       await axios.delete(`/api/notifications/delete?id=${id}`, {
         withCredentials: true,
       });
-      setNotifications(notifications.filter((n) => n._id !== id));
+      setNotifications(notifications.filter((n:any) => n._id! !== id));
     } catch (error) {
       console.error("Error deleting notification:", error);
     }

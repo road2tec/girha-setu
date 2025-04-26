@@ -16,7 +16,12 @@ export type Flat = {
   distance?: number;
   type: "Apartment" | "House" | "Villa" | "Penthouse" | "Studio";
   mainImage: string;
-  images: string[];
+  images: [
+    {
+      url: string;
+      caption: string;
+    }
+  ];
   amenities: [
     {
       type: string;

@@ -18,7 +18,7 @@ export async function DELETE(req: NextRequest) {
   }
   // delete notification by id
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET!);
+    const data = jwt.verify(token, process.env.JWT_SECRET!) as any;
     if (!data) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -33,7 +33,7 @@ export async function DELETE(req: NextRequest) {
         { status: 404 }
       );
     }
-    user.notifications = user.notifications.filter((n) => n.toString() !== id);
+    user.notifications = user.notifications.filter((n : any) => n.toString() !== id);
     await user.save();
     return NextResponse.json({ message: "Notification deleted" });
   } catch (error) {

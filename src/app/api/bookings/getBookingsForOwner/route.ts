@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET as string);
+    const data = jwt.verify(token, process.env.JWT_SECRET as string) as any;
     const flats = await Flat.find({ owner: data._id });
     var bookings;
     if (flats.length > 0) {

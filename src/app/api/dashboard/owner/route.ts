@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   if (!token) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-  const data = jwt.verify(token, process.env.JWT_SECRET as string);
+  const data = jwt.verify(token, process.env.JWT_SECRET as string) as any;
   if (!data) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }

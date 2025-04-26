@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "No token found" }, { status: 400 });
   }
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET!);
+    const data = jwt.verify(token, process.env.JWT_SECRET!) as any;
     if (data.name === "Admin") {
       return NextResponse.json({ data, status: 200 });
     }

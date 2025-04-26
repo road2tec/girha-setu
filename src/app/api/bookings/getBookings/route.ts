@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET as string);
+    const data = jwt.verify(token, process.env.JWT_SECRET as string) as any;
     const bookings = await Booking.find({ user: data._id })
       .populate("property")
       .populate("user")

@@ -189,7 +189,7 @@ const PropertyPage = () => {
               className="w-full h-full object-contain rounded-lg shadow-lg bg-base-300"
             />
             <div className="grid grid-cols-2 gap-2 bg-base-300 p-4 rounded-lg shadow-md">
-              {property.images.map((img, index) => (
+              {property.images.map((img :any, index) => (
                 <img
                   key={index}
                   src={img}
